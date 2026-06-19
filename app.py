@@ -27,11 +27,10 @@ st.markdown("""
 
 /* GLOBAL BACKGROUND */
 html, body, .stApp {
-    background: radial-gradient(circle at top, #0a0a0a 0%, #000000 60%, #000000 100%);
-    color: var(--text);
+    background: #000000 !important;
+    color: #eaeaea;
     font-family: 'Lato', sans-serif;
 }
-
 /* PIXEL HEADINGS */
 h1, h2, h3 {
     font-family: 'Press Start 2P', cursive;
