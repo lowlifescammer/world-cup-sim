@@ -296,6 +296,26 @@ with col1:
 
         df = pd.DataFrame(results.items(), columns=["team", "wins"])
         df["prob"] = df["wins"] / df["wins"].sum()
+        # -------------------------
+# PORTFOLIO VISUAL UPGRADE
+# -------------------------
+
+st.markdown("## tournament snapshot")
+
+col_a, col_b, col_c = st.columns(3)
+
+col_a.metric("Most likely champion", df.iloc[0]["team"], f"{df.iloc[0]['prob']:.1%}")
+col_b.metric("Simulations", sims)
+col_c.metric("Teams tracked", len(df))
+
+st.markdown("---")
+
+# probability bar chart (simple + clean)
+chart_df = df.sort_values("prob", ascending=True)
+
+st.bar_chart(chart_df.set_index("team")["prob"])
+
+        
 
         st.markdown("## feed")
 
