@@ -81,7 +81,7 @@ h3 {
 }
 
 /* global headings adopt same font */
-h1, h2, h3, h4 {
+h3, h3, h3, h3 {
     font-family: var(--heading-font);
 }
 
