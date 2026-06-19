@@ -23,30 +23,18 @@ match_cache = {}
 # =========================
 fixture_probs = {}
 
-for _, row in fixtures.iterrows():
+for _, row in comparison.iterrows():
 
-    home = str(row['home_team']).strip().lower()
-    away = str(row['away_team']).strip().lower()
-
-    # handle both naming styles safely
-    home_prob = row.get('home_ml', None)
-    draw_prob = row.get('draw_ml', None)
-    away_prob = row.get('away_ml', None)
-
-    # fallback if ML columns don't exist (USE ODDS INSTEAD)
-    if home_prob is None or draw_prob is None or away_prob is None:
-
-        home_prob = 1 / row['home_odds_x']
-        draw_prob = 1 / row['draw_odds']
-        away_prob = 1 / row['away_odds']
-
-        total = home_prob + draw_prob + away_prob
-
-        home_prob /= total
-        draw_prob /= total
-        away_prob /= total
-
-    fixture_probs[(home, away)] = (home_prob, draw_prob, away_prob)
+    fixture_probs[
+        (
+            row['home_team'].strip().lower(),
+            row['away_team'].strip().lower()
+        )
+    ] = (
+        1 / row['home_odds_x'],
+        1 / row['draw_odds_x'],
+        1 / row['away_odds_x']
+    )
 
 # =========================
 # MATCH PROBABILITY ENGINE
