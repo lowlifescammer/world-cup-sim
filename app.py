@@ -217,64 +217,85 @@ def monte_carlo(n):
 st.set_page_config(layout="wide")
 
 st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@300;400;700&display=swap');
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
-/* GLOBAL BACKGROUND (gradient) */
+<style>
+
+/* =========================
+   GLOBAL BACKGROUND (GRADIENT)
+========================= */
 .stApp {
-    background: linear-gradient(135deg, #0b0c10 0%, #11131a 40%, #0a0f1c 100%);
+    background: linear-gradient(135deg, #0b0c10 0%, #11131a 40%, #0a0f1f 100%);
     color: #eaeaea;
 }
 
-/* BODY FONT */
+/* =========================
+   GLOBAL FONT RULES
+========================= */
 html, body, [class*="css"] {
     font-family: 'Lato', sans-serif;
     color: #eaeaea;
 }
 
-/* HEADINGS */
-h1, h2, h3, h4 {
+/* HEADINGS = PLAYFAIR */
+h1, h2, h3 {
     font-family: 'Playfair Display', serif !important;
     font-weight: 700 !important;
     letter-spacing: 0.5px;
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
-/* SIDEBAR */
+/* remove Streamlit ugly blue links */
+a {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
 [data-testid="stSidebar"] {
-    background: rgba(10, 12, 18, 0.75);
+    background: rgba(10, 12, 18, 0.85);
     backdrop-filter: blur(10px);
     border-right: 1px solid rgba(255,255,255,0.08);
 }
 
-/* CARD STYLE */
+/* =========================
+   CARDS (YOUR FEED UI)
+========================= */
 .card {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 14px;
     padding: 14px 16px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     backdrop-filter: blur(8px);
 }
 
-/* SMALL TEXT */
+/* small muted text */
 .small {
     opacity: 0.65;
     font-size: 13px;
 }
 
-/* BUTTONS */
+/* remove top padding clutter */
+.block-container {
+    padding-top: 2rem;
+}
+
+/* buttons */
 .stButton > button {
-    background: linear-gradient(135deg, #2b2f3a, #1b1f2a);
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
     color: white;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: none;
     border-radius: 10px;
     padding: 0.5rem 1rem;
 }
 
-/* SLIDER */
-.stSlider > div {
-    color: white;
+.stButton > button:hover {
+    transform: scale(1.02);
+    transition: 0.2s;
 }
+
 </style>
 """, unsafe_allow_html=True)
