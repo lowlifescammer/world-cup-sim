@@ -201,9 +201,9 @@ with col2:
         <b>model behavior</b><br><br>
         • stronger teams win more consistently due to underlying rating advantage<br>
         • randomness still plays a major role in knockout rounds <br>
-        • monte carlo approximates full tournament probability distributions
-        • repeated sampling reduces noise and reveals stable win likelihoods
-        • allows comparison of teams under identical simulated conditions
+        • monte carlo approximates full tournament probability distributions <br>
+        • repeated sampling reduces noise and reveals stable win likelihoods <br>
+        • allows comparison of teams under identical simulated conditions <br>
         • upsets still possible (do you believe in world cup magic?)
         </div>
         """, unsafe_allow_html=True)
