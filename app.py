@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 from collections import Counter
-import os
 
 # =========================
 # PAGE CONFIG
@@ -10,7 +9,13 @@ import os
 st.set_page_config(layout="wide")
 
 # =========================
-# UI STYLE (FIFA / GAME MENU)
+# SESSION STATE (TIMELINE)
+# =========================
+if "stage" not in st.session_state:
+    st.session_state.stage = 0
+
+# =========================
+# UI STYLE (FIFA / GAME UI)
 # =========================
 st.markdown("""
 <style>
@@ -27,8 +32,8 @@ h1, h2, h3 {
     font-family: 'Press Start 2P', monospace !important;
     font-size: 20px !important;
     color: #ffffff !important;
-    text-transform: lowercase !important;
     text-shadow: 0 0 6px #00ffcc;
+    text-transform: lowercase;
 }
 
 /* SIDEBAR */
@@ -83,27 +88,7 @@ p, span, div, label {
 """, unsafe_allow_html=True)
 
 # =========================
-# SAFE SIDEBAR
-# =========================
-with st.sidebar:
-    st.markdown("## world cup simulator")
-
-    st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
-
-    sims = st.slider("simulations", 500, 20000, 5000)
-    run = st.button("run simulation")
-
-    st.markdown("---")
-    st.markdown("elo + monte carlo model")
-
-# =========================
-# HEADER
-# =========================
-st.markdown("# world cup simulator")
-st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
-
-# =========================
-# CORE SIMULATION
+# CORE SIMULATION MODEL
 # =========================
 teams = [
     "Brazil", "Germany", "France", "Argentina",
@@ -118,6 +103,60 @@ def simulate(n):
         winner = np.random.choice(teams, p=probs)
         counter[winner] += 1
     return counter
+
+# =========================
+# SIDEBAR
+# =========================
+with st.sidebar:
+    st.markdown("## world cup simulator")
+
+    st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
+
+    sims = st.slider("simulations", 500, 20000, 5000)
+
+    run = st.button("run simulation")
+
+    if run:
+        st.session_state.stage = min(st.session_state.stage + 1, 5)
+
+    st.markdown("---")
+    st.markdown("## model evolution")
+
+    def stage_card(title, text, stage_id):
+        active = st.session_state.stage >= stage_id
+
+        color = "#00ffcc" if active else "#222"
+        opacity = "1" if active else "0.35"
+        glow = "0 0 10px #00ffcc" if active else "none"
+
+        st.markdown(f"""
+        <div style="
+            border: 1px solid {color};
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            opacity: {opacity};
+            box-shadow: {glow};
+            transition: 0.3s ease;
+        ">
+            <b>{title}</b><br>
+            <span style="font-size:10px;">
+            {text}
+            </span>
+        </div>
+        """, unsafe_allow_html=True)
+
+    stage_card("phase 1 — initial model", "basic elo prototype", 1)
+    stage_card("phase 2 — sportsbook comparison", "benchmark vs market odds", 2)
+    stage_card("phase 3 — calibration fixes", "brier score optimisation", 3)
+    stage_card("phase 4 — monte carlo system", "tournament simulation layer", 4)
+    stage_card("phase 5 — final dashboard", "fifa-style portfolio ui", 5)
+
+# =========================
+# HEADER
+# =========================
+st.markdown("# world cup simulator")
+st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
 
 # =========================
 # LAYOUT
@@ -145,6 +184,7 @@ with col1:
 
     else:
         st.markdown("## feed")
+
         st.markdown("""
         <div class="card">
         run simulation to generate tournament outcomes
@@ -160,7 +200,7 @@ with col2:
         <div class="card">
         <b>model behavior</b><br><br>
         • stronger teams dominate<br>
-        • monte carlo reduces noise<br>
+        • monte carlo reduces randomness<br>
         • upsets still possible
         </div>
         """, unsafe_allow_html=True)
