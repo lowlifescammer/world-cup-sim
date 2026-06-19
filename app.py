@@ -9,67 +9,99 @@ from collections import Counter
 st.set_page_config(layout="wide")
 
 # =========================
-# SESSION STATE (TIMELINE)
+# SESSION STATE (MENU SYSTEM)
 # =========================
-if "stage" not in st.session_state:
-    st.session_state.stage = 0
+if "menu" not in st.session_state:
+    st.session_state.menu = "dashboard"
 
 # =========================
-# UI STYLE (FIFA / GAME UI)
+# SIMULATION MODEL (SAFE DUMMY)
+# =========================
+teams = [
+    "Brazil", "Germany", "France", "Argentina",
+    "Mexico", "South Korea", "USA", "Morocco"
+]
+
+probs = [0.18, 0.16, 0.14, 0.13, 0.12, 0.10, 0.10, 0.07]
+
+def simulate(n):
+    counter = Counter()
+    for _ in range(n):
+        winner = np.random.choice(teams, p=probs)
+        counter[winner] += 1
+    return counter
+
+# =========================
+# CSS (FIFA CAREER MODE UI)
 # =========================
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 html, body, .stApp {
-    background-color: #000000 !important;
-    color: #e6e6e6 !important;
+    background-color: #000 !important;
+    color: #fff !important;
     font-family: 'Press Start 2P', monospace !important;
 }
 
 /* HEADINGS */
 h1, h2, h3 {
-    font-family: 'Press Start 2P', monospace !important;
     font-size: 20px !important;
-    color: #ffffff !important;
-    text-shadow: 0 0 6px #00ffcc;
     text-transform: lowercase;
+    text-shadow: 0 0 8px #00ffcc;
 }
 
 /* SIDEBAR */
 [data-testid="stSidebar"] {
-    background-color: #050505 !important;
+    background: #050505 !important;
     border-right: 1px solid #222;
-    padding: 20px;
 }
 
-/* TEXT */
-p, span, div, label {
-    text-transform: lowercase !important;
-}
-
-/* BUTTON */
+/* BUTTONS */
 .stButton > button {
-    background-color: #111;
+    background: #111;
     color: #00ffcc;
     border: 1px solid #00ffcc;
-    padding: 0.6rem 1rem;
-    font-family: 'Press Start 2P', monospace;
+    transition: all 0.2s ease;
 }
 
 .stButton > button:hover {
-    background-color: #00ffcc;
+    background: #00ffcc;
     color: #000;
-    box-shadow: 0 0 10px #00ffcc;
+    box-shadow: 0 0 12px #00ffcc;
 }
 
-/* CARD */
+/* MENU CARDS */
+.menu-card {
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border: 1px solid #222;
+    background: #0a0a0a;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+/* hover glow */
+.menu-card:hover {
+    border: 1px solid #00ffcc;
+    box-shadow: 0 0 12px #00ffcc;
+    transform: scale(1.02);
+}
+
+/* ACTIVE STATE */
+.menu-active {
+    border: 1px solid #00ffcc !important;
+    box-shadow: 0 0 18px #00ffcc !important;
+}
+
+/* CARD OUTPUT */
 .card {
     background: #0a0a0a;
     border: 1px solid #222;
+    padding: 10px;
+    margin-bottom: 8px;
     border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 10px;
 }
 
 /* DIVIDER */
@@ -88,69 +120,38 @@ p, span, div, label {
 """, unsafe_allow_html=True)
 
 # =========================
-# CORE SIMULATION MODEL
-# =========================
-teams = [
-    "Brazil", "Germany", "France", "Argentina",
-    "Mexico", "South Korea", "USA", "Morocco"
-]
-
-probs = [0.18, 0.16, 0.14, 0.13, 0.12, 0.10, 0.10, 0.07]
-
-def simulate(n):
-    counter = Counter()
-    for _ in range(n):
-        winner = np.random.choice(teams, p=probs)
-        counter[winner] += 1
-    return counter
-
-# =========================
-# SIDEBAR
+# SIDEBAR (CAREER MODE MENU)
 # =========================
 with st.sidebar:
-    st.markdown("## world cup simulator")
 
+    st.markdown("## world cup simulator")
     st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
 
     sims = st.slider("simulations", 500, 20000, 5000)
-
     run = st.button("run simulation")
 
-    if run:
-        st.session_state.stage = min(st.session_state.stage + 1, 5)
-
     st.markdown("---")
-    st.markdown("## model evolution")
+    st.markdown("## career mode")
 
-    def stage_card(title, text, stage_id):
-        active = st.session_state.stage >= stage_id
+    def menu_item(label, key):
+        is_active = st.session_state.menu == key
+        cls = "menu-card menu-active" if is_active else "menu-card"
 
-        color = "#00ffcc" if active else "#222"
-        opacity = "1" if active else "0.35"
-        glow = "0 0 10px #00ffcc" if active else "none"
+        if st.button(label, key=key):
+            st.session_state.menu = key
 
         st.markdown(f"""
-        <div style="
-            border: 1px solid {color};
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            opacity: {opacity};
-            box-shadow: {glow};
-            transition: 0.3s ease;
-        ">
-            <b>{title}</b><br>
-            <span style="font-size:10px;">
-            {text}
-            </span>
+        <div class="{cls}">
+            {label}
         </div>
         """, unsafe_allow_html=True)
 
-    stage_card("phase 1 — initial model", "basic elo prototype", 1)
-    stage_card("phase 2 — sportsbook comparison", "benchmark vs market odds", 2)
-    stage_card("phase 3 — calibration fixes", "brier score optimisation", 3)
-    stage_card("phase 4 — monte carlo system", "tournament simulation layer", 4)
-    stage_card("phase 5 — final dashboard", "fifa-style portfolio ui", 5)
+    menu_item("dashboard", "dashboard")
+    menu_item("initial model", "phase1")
+    menu_item("sportsbook comparison", "phase2")
+    menu_item("brier calibration", "phase3")
+    menu_item("monte carlo engine", "phase4")
+    menu_item("final system", "phase5")
 
 # =========================
 # HEADER
@@ -159,20 +160,31 @@ st.markdown("# world cup simulator")
 st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
 
 # =========================
-# LAYOUT
+# SIMULATION ENGINE
+# =========================
+def simulate(n):
+    counter = Counter()
+    for _ in range(n):
+        winner = np.random.choice(teams, p=probs)
+        counter[winner] += 1
+    return counter
+
+# =========================
+# MAIN LAYOUT
 # =========================
 col1, col2 = st.columns([2.5, 1])
 
 with col1:
 
+    st.markdown(f"## {st.session_state.menu}")
+
     if run:
+
         results = simulate(int(sims))
 
         df = pd.DataFrame(results.items(), columns=["team", "wins"])
         df["prob"] = df["wins"] / df["wins"].sum()
         df = df.sort_values("prob", ascending=False)
-
-        st.markdown("## results feed")
 
         for _, row in df.iterrows():
             st.markdown(f"""
@@ -183,11 +195,9 @@ with col1:
             """, unsafe_allow_html=True)
 
     else:
-        st.markdown("## feed")
-
         st.markdown("""
         <div class="card">
-        run simulation to generate tournament outcomes
+        select a career mode stage and run simulation
         </div>
         """, unsafe_allow_html=True)
 
@@ -198,9 +208,9 @@ with col2:
     if run:
         st.markdown("""
         <div class="card">
-        <b>model behavior</b><br><br>
+        <b>model notes</b><br><br>
+        • monte carlo stabilises randomness<br>
         • stronger teams dominate<br>
-        • monte carlo reduces randomness<br>
-        • upsets still possible
+        • upsets still occur
         </div>
         """, unsafe_allow_html=True)
