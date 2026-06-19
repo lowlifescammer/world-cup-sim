@@ -2,6 +2,13 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 from collections import Counter
+def monte_carlo(n):
+    winners = Counter()
+
+    for _ in range(n):
+        winners[simulate_world_cup()] += 1
+
+    return winners
 
 # -------------------------
 # PAGE SETUP
@@ -73,14 +80,8 @@ st.markdown("---")
 # -------------------------
 # SIMULATION (placeholder hook)
 # -------------------------
-teams = ["Brazil","Germany","France","Mexico","England","Argentina"]
-
 def simulate(n):
-    r = Counter()
-    for _ in range(n):
-        r[np.random.choice(teams)] += 1
-    return r
-
+    return monte_carlo(n)
 # -------------------------
 # LAYOUT: FEED + SIDE INSIGHTS
 # -------------------------
@@ -89,7 +90,7 @@ col1, col2 = st.columns([2.5, 1])
 with col1:
 
     if run:
-        results = simulate(sims)
+        results = simulate(int(sims))
 
         df = pd.DataFrame(results.items(), columns=["team", "wins"])
         df["prob"] = df["wins"] / df["wins"].sum()
