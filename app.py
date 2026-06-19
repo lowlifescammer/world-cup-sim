@@ -36,7 +36,7 @@ for _, row in fixtures.iterrows():
     # fallback if ML columns don't exist (USE ODDS INSTEAD)
     if home_prob is None or draw_prob is None or away_prob is None:
 
-        home_prob = 1 / row['home_odds']
+        home_prob = 1 / row['home_odds_x']
         draw_prob = 1 / row['draw_odds']
         away_prob = 1 / row['away_odds']
 
