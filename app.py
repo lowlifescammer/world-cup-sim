@@ -211,6 +211,6 @@ with col2:
     # =========================
     # VIDEO HUB (ONLY ADDITION)
     # =========================
-    st.markdown("## broadcast")
+    st.markdown("## feats")
 
-    st.video("assets/vid.mov", start_time=0)
+    st.video("assets/vid.mp4")
