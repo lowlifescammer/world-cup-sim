@@ -108,7 +108,7 @@ def simulate(n):
 # SIDEBAR
 # =========================
 with st.sidebar:
-    st.markdown("## world cup simulator")
+    st.markdown("## monte carlo world cup simulator")
 
     st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
 
@@ -155,7 +155,7 @@ with st.sidebar:
 # =========================
 # HEADER
 # =========================
-st.markdown("# if the world cup was played 50000 times, who would win?")
+st.markdown("# if the world cup was played 20,0000 times, who would win?")
 st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
 
 # =========================
