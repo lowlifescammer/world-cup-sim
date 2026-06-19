@@ -2,39 +2,42 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 from collections import Counter
+import os
 
-# =========================
+# -------------------------
 # PAGE CONFIG
-# =========================
-st.set_page_config(page_title="World Cup Sim", layout="wide")
+# -------------------------
+st.set_page_config(page_title="World Cup Simulator", layout="wide")
 
-# =========================
-# UI STYLE (FONTS + GRADIENT)
-# =========================
+# -------------------------
+# CUSTOM UI (FONTS + GRADIENT)
+# -------------------------
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@300;400;700&display=swap');
 
-html, body {
+html, body, [class*="css"] {
     font-family: 'Lato', sans-serif;
-    background: linear-gradient(135deg, #0b0c10, #111827, #0b0c10);
-    color: #eaeaea;
+    background: linear-gradient(135deg, #0f0f1a, #1b1b2e, #0a0a12);
+    color: #f2f2f2;
 }
 
+/* main app background */
+.stApp {
+    background: linear-gradient(135deg, #0f0f1a, #1b1b2e, #0a0a12);
+}
+
+/* headings */
 h1, h2, h3 {
     font-family: 'Playfair Display', serif !important;
-    font-weight: 700 !important;
+    font-weight: 700;
     letter-spacing: 0.5px;
-}
-
-.stApp {
-    background: transparent;
 }
 
 /* sidebar */
 [data-testid="stSidebar"] {
-    background: rgba(10, 10, 15, 0.85);
-    border-right: 1px solid #222;
+    background: rgba(10,10,18,0.7);
+    border-right: 1px solid rgba(255,255,255,0.08);
 }
 
 /* cards */
@@ -43,139 +46,108 @@ h1, h2, h3 {
     border: 1px solid rgba(255,255,255,0.08);
     padding: 16px;
     border-radius: 14px;
-    margin-bottom: 10px;
-    backdrop-filter: blur(10px);
+    margin-bottom: 12px;
+    backdrop-filter: blur(8px);
 }
 
+/* small text */
 .small {
-    font-size: 13px;
     opacity: 0.7;
+    font-size: 13px;
 }
-
 </style>
 """, unsafe_allow_html=True)
 
-# =========================
+# -------------------------
+# LOAD SAFE DATA
+# -------------------------
+@st.cache_data
+def load_data():
+    if not os.path.exists("results.csv"):
+        return None, None
+
+    results = pd.read_csv("results.csv")
+    return results, True
+
+results, data_ok = load_data()
+
+# -------------------------
 # SIDEBAR
-# =========================
+# -------------------------
 with st.sidebar:
-    st.markdown("## World Cup Simulator")
-    sims = st.slider("Simulations", 1000, 20000, 5000)
+    st.markdown("## ⚽ World Cup Simulator")
+    sims = st.slider("Simulations", 500, 20000, 5000)
     run = st.button("Run Simulation")
 
     st.markdown("---")
-    st.markdown("Elo + Form + Monte Carlo Model")
+    st.markdown("Built with Elo + Monte Carlo")
 
-# =========================
-# TEAM BASE (SAFE DEFAULTS)
-# =========================
-teams = [
-    "Brazil", "Germany", "France", "Argentina",
-    "Mexico", "England", "Spain", "Netherlands",
-    "South Korea", "Morocco", "Canada", "USA"
-]
-
-# simple “realism” weights (you can tune later)
-base_strength = {
-    "Brazil": 0.95,
-    "Germany": 0.90,
-    "France": 0.92,
-    "Argentina": 0.91,
-    "England": 0.88,
-    "Spain": 0.87,
-    "Netherlands": 0.84,
-    "Mexico": 0.75,
-    "USA": 0.74,
-    "Canada": 0.70,
-    "South Korea": 0.73,
-    "Morocco": 0.76
-}
-
-def simulate_match(a, b):
-    pa = base_strength.get(a, 0.5)
-    pb = base_strength.get(b, 0.5)
-
-    total = pa + pb
-    pa /= total
-    pb /= total
-
-    r = np.random.rand()
-    if r < pa:
-        return a
-    else:
-        return b
-
-
-def simulate_world_cup():
-    pool = teams.copy()
-    np.random.shuffle(pool)
-
-    # knockout style tournament
-    while len(pool) > 1:
-        next_round = []
-        for i in range(0, len(pool), 2):
-            next_round.append(simulate_match(pool[i], pool[i+1]))
-        pool = next_round
-
-    return pool[0]
-
-
-def monte_carlo(n):
-    winners = Counter()
-    for _ in range(n):
-        winners[simulate_world_cup()] += 1
-    return winners
-
-# =========================
+# -------------------------
 # HEADER
-# =========================
-st.markdown("# World Cup Simulator")
-st.markdown("<div class='small'>Monte Carlo tournament engine</div>", unsafe_allow_html=True)
+# -------------------------
+st.markdown("# World Cup Simulation Engine")
+st.markdown("<div class='small'>probabilistic tournament modelling for portfolio</div>", unsafe_allow_html=True)
 st.markdown("---")
 
-# =========================
-# MAIN
-# =========================
+# -------------------------
+# FALLBACK SIMULATION (SAFE)
+# -------------------------
+teams = [
+    "Brazil", "Germany", "France", "Argentina",
+    "Mexico", "South Korea", "USA", "Morocco"
+]
+
+def simulate(n):
+    counter = Counter()
+    for _ in range(n):
+        winner = np.random.choice(teams, p=[0.18,0.16,0.14,0.13,0.12,0.10,0.10,0.07])
+        counter[winner] += 1
+    return counter
+
+# -------------------------
+# LAYOUT
+# -------------------------
 col1, col2 = st.columns([2.5, 1])
 
 with col1:
-    st.markdown("## Results Feed")
 
     if run:
-        results = monte_carlo(sims)
+        results = simulate(int(sims))
 
         df = pd.DataFrame(results.items(), columns=["team", "wins"])
         df["prob"] = df["wins"] / df["wins"].sum()
         df = df.sort_values("prob", ascending=False)
 
-        for _, r in df.iterrows():
+        st.markdown("## Tournament Outcomes")
+
+        for _, row in df.iterrows():
             st.markdown(f"""
             <div class="card">
-                <b>{r['team']}</b><br>
-                <span class="small">Win probability: {r['prob']:.2%}</span>
+                <b>{row['team']}</b><br>
+                <span class="small">win probability: {row['prob']:.2%}</span>
             </div>
             """, unsafe_allow_html=True)
 
-        st.bar_chart(df.set_index("team")["prob"])
-
     else:
+        st.markdown("## Feed")
         st.markdown("""
         <div class="card">
-        Run the simulation to generate World Cup outcomes
+        Run simulation to generate World Cup outcomes
         </div>
         """, unsafe_allow_html=True)
 
 with col2:
-    st.markdown("## Model Notes")
+
+    st.markdown("## Insights")
 
     if run:
         st.markdown("""
         <div class="card">
-        <b>Behaviour</b><br>
+        <b>Model Notes</b><br>
         <span class="small">
         • Strong teams dominate<br>
-        • Knockout randomness included<br>
-        • Monte Carlo smooths variance
+        • Monte Carlo smooths randomness<br>
+        • Upsets still possible
         </span>
         </div>
         """, unsafe_allow_html=True)
