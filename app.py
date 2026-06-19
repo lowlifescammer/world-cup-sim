@@ -149,23 +149,6 @@ def stage_card(title, text, stage_id):
     </div>
     """, unsafe_allow_html=True)
 
-    /* 🔥 HOVER EFFECT (THIS IS THE KEY) */
-    .card-{stage_id}:hover {{
-        border: 1px solid #00ffcc;
-        box-shadow: 0 0 12px #00ffcc;
-        opacity: 1;
-        transform: scale(1.02);
-    }}
-    </style>
-
-    <div class="card card-{stage_id}">
-        <b>{title}</b><br>
-        <span style="font-size:10px;">
-        {text}
-        </span>
-    </div>
-    """, unsafe_allow_html=True)
-
     stage_card("phase 1 — initial model", "basic elo prototype", 1)
     stage_card("phase 2 — sportsbook comparison", "benchmark vs market odds", 2)
     stage_card("phase 3 — calibration fixes", "brier score optimisation", 3)
