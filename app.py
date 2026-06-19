@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from collections import Counter
 
-import pandas as pd
+import pandas as pdeau
 import os
 
 print(os.listdir())
@@ -76,9 +76,15 @@ def get_match_probs(team1, team2):
         'is_friendly': 0,
         'form_diff': 0
     }])
+    features = [
+    'elo_diff',
+    'neutral',
+    'is_world_cup',
+    'is_friendly',
+    'form_diff'
+]
 
-  features = ['elo_diff', 'neutral', 'is_world_cup', 'is_friendly', 'form_diff']
-  X = row[features]
+X = row[features]
 
     probs = model.predict_proba(X)[0]
 
