@@ -21,21 +21,39 @@ match_cache = {}
 # =========================
 # FIXTURE PROB LOOKUP
 # =========================
-fixture_probs = {}
+# -------------------------
+# SAFE DATA LOAD
+# -------------------------
+import pandas as pd
 
-for _, row in comparison.iterrows():
+try:
+    fixtures = pd.read_csv("fixtures.csv")
+    odds = pd.read_csv("odds.csv")
+except Exception as e:
+    st.error(f"Missing data files: {e}")
+    st.stop()
 
-    fixture_probs[
-        (
-            row['home_team'].strip().lower(),
-            row['away_team'].strip().lower()
-        )
-    ] = (
-        1 / row['home_odds_x'],
-        1 / row['draw_odds_x'],
-        1 / row['away_odds_x']
-    )
+# -------------------------
+# CLEAN KEYS
+# -------------------------
+fixtures["key"] = (
+    fixtures["home_team"].str.strip().str.lower()
+    + " vs "
+    + fixtures["away_team"].str.strip().str.lower()
+)
 
+odds["key"] = (
+    odds["home_team"].str.strip().str.lower()
+    + " vs "
+    + odds["away_team"].str.strip().str.lower()
+)
+
+# -------------------------
+# MERGE (THIS CREATES comparison)
+# -------------------------
+comparison = fixtures.merge(odds, on="key", how="inner")
+
+st.write("Matched rows:", len(comparison))
 # =========================
 # MATCH PROBABILITY ENGINE
 # =========================
