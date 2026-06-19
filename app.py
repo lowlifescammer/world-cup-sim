@@ -71,6 +71,19 @@ h3 {
     font-size: 14px;
     margin-bottom: 20px;
 }
+:root {
+    --heading-font: 'Press Start 2P', monospace;
+    --body-font: 'Lato', sans-serif;
+}
+/* sidebar title font source */
+[data-testid="stSidebar"] h2 {
+    font-family: var(--heading-font);
+}
+
+/* global headings adopt same font */
+h1, h2, h3, h4 {
+    font-family: var(--heading-font);
+}
 
 /* BUTTONS */
 .stButton>button {
