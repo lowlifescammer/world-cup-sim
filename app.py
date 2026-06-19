@@ -2,114 +2,79 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from collections import Counter
+st.markdown("""
+<style>
 
-# -----------------------------
-# PAGE CONFIG (THEME BASE)
-# -----------------------------
-st.set_page_config(
-    page_title="World Cup Simulator",
-    page_icon="⚽",
-    layout="wide"
-)
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
 
-# -----------------------------
-# SIDEBAR (INTERLOPER STYLE CONTROL PANEL)
-# -----------------------------
-with st.sidebar:
-    st.markdown("## ⚙️ controls")
-    st.markdown("---")
+html, body, [class*="css"]  {
+    font-family: 'Inter', sans-serif;
+    background-color: #0e0e10;
+    color: #e6e6e6;
+}
 
-    sims = st.slider("simulation runs", 500, 20000, 5000, step=500)
+/* main app background */
+.stApp {
+    background-color: #0e0e10;
+}
 
-    st.markdown("---")
-    st.markdown("**world cup model**")
-    st.caption("elo + form + monte carlo")
+/* sidebar */
+[data-testid="stSidebar"] {
+    background-color: #111114;
+}
 
-    run = st.button("run simulation →")
+/* headings */
+h1, h2, h3 {
+    letter-spacing: -0.5px;
+}
 
-# -----------------------------
-# FAKE/REAL SIM FUNCTION HOOK
-# (replace with your monte_carlo)
-# -----------------------------
-teams = [
-    "Brazil", "Germany", "Mexico",
-    "South Africa", "France", "England",
-    "Argentina", "Netherlands"
-]
+/* cards */
+div[data-testid="stMarkdownContainer"] {
+    line-height: 1.6;
+}
 
-def simulate(n):
-    results = Counter()
-    for _ in range(n):
-        winner = np.random.choice(teams)
-        results[winner] += 1
-    return results
+</style>
+""", unsafe_allow_html=True)
+st.markdown(f"""
+<div style="
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #2a2a2a;
+    background: #151518;
+    margin-bottom: 10px;
+">
+    <div style="font-size:16px; font-weight:600;">
+        {row['team']}
+    </div>
+    <div style="opacity:0.7;">
+        win share: {row['probability']:.2%}
+    </div>
+</div>
+""", unsafe_allow_html=True)
+st.markdown("""
+<style>
+:root {
+    --accent: #7c5cff;
+}
 
-# -----------------------------
-# MAIN HEADER (INTERLOPER FEEL)
-# -----------------------------
-st.markdown("# world cup simulator")
-st.caption("probabilistic tournament outcomes using monte carlo simulation")
+/* buttons */
+.stButton > button {
+    background-color: var(--accent);
+    color: white;
+    border-radius: 8px;
+    border: none;
+}
 
-st.markdown("---")
-
-# -----------------------------
-# MAIN FEED LAYOUT
-# -----------------------------
-col1, col2 = st.columns([2, 1])
-
-# LEFT COLUMN (MAIN FEED)
-with col1:
-
-    if run:
-        results = simulate(sims)
-
-        df = pd.DataFrame(results.items(), columns=["team", "wins"])
-        df["probability"] = df["wins"] / df["wins"].sum()
-
-        # ---- CARD 1: TOP TEAMS ----
-        st.markdown("### 🏆 dominant outcomes")
-
-        top_df = df.sort_values("wins", ascending=False)
-
-        for _, row in top_df.iterrows():
-            st.markdown(f"""
-            <div style="
-                padding: 12px;
-                border: 1px solid #333;
-                border-radius: 10px;
-                margin-bottom: 8px;
-            ">
-                <b>{row['team']}</b><br>
-                win share: {row['probability']:.2%}
-            </div>
-            """, unsafe_allow_html=True)
-
-        st.markdown("---")
-
-        # ---- CARD 2: CHART ----
-        st.markdown("### distribution")
-
-        st.bar_chart(df.set_index("team")["probability"])
-
-    else:
-        st.markdown("### run simulation to generate outcomes")
-        st.info("use sidebar → run simulation")
-
-# RIGHT COLUMN (INSIGHTS PANEL)
-with col2:
-
-    st.markdown("### insights")
-
-    if run:
-        st.markdown("**model behaviour**")
-        st.write("• elite teams dominate due to elo priors")
-        st.write("• variance increases in knockout stage")
-        st.write("• upsets still occur in ~low probability tails")
-
-        st.markdown("---")
-
-        st.markdown("**simulation size**")
-        st.metric("runs", sims)
-
-    else:
-        st.markdown("no data yet")
+.stButton > button:hover {
+    background-color: #6a4df0;
+}
+</style>
+""", unsafe_allow_html=True)
+st.markdown("""
+<div style="padding: 20px 0 10px 0;">
+    <h1 style="margin-bottom:0;">world cup simulator</h1>
+    <p style="opacity:0.6; margin-top:4px;">
+        monte carlo simulation • team strength model • probabilistic outcomes
+    </p>
+</div>
+""", unsafe_allow_html=True)
