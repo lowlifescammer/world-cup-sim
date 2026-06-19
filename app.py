@@ -139,6 +139,15 @@ def stage_card(title, text, stage_id):
         transition: all 0.25s ease;
         box-shadow: none;
     }}
+    </style>
+
+    <div class="card card-{stage_id}">
+        <b>{title}</b><br>
+        <span style="font-size:10px;">
+        {text}
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
 
     /* 🔥 HOVER EFFECT (THIS IS THE KEY) */
     .card-{stage_id}:hover {{
