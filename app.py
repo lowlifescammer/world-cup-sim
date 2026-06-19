@@ -1,6 +1,14 @@
+import streamlit as st
 import numpy as np
 import pandas as pd
 from collections import Counter
+
+import pandas as pd
+
+fixtures = pd.read_csv("fixtures.csv")
+elo = pd.read_csv("elo.csv")
+odds = pd.read_csv("odds.csv")
+results = pd.read_csv("results.csv")
 
 # =========================
 # GLOBAL STORAGE (must exist)
