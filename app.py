@@ -35,11 +35,12 @@ html, body, .stApp {
 /* PIXEL HEADINGS */
 h1, h2, h3 {
     font-family: 'Press Start 2P', cursive;
-    color: white;
+    color: #f2f2f2;
+
     text-shadow:
-        0 0 5px var(--neon),
-        0 0 10px var(--neon),
-        0 0 20px var(--neon2);
+        0 0 2px rgba(0, 255, 204, 0.25),
+        0 0 6px rgba(0, 255, 204, 0.18);
+
     letter-spacing: 1px;
     text-transform: lowercase;
 }
