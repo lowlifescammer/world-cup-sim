@@ -113,28 +113,6 @@ div.stButton {
 </style>
 """, unsafe_allow_html=True)
 
-# =========================
-# SIDEBAR (CLEANED)
-# =========================
-with st.sidebar:
-    st.markdown("## world cup simulator")
-
-    st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
-
-    sims = st.slider("simulation runs", 500, 20000, 5000)
-
-    st.markdown("""
-    <div class="card">
-    this model uses monte carlo simulation with:
-    <br><br>
-    • elo ratings<br>
-    • form streaks<br>
-    • probabilistic match outcomes<br><br>
-    it simulates thousands of tournaments and averages results.
-    </div>
-    """, unsafe_allow_html=True)
-
-    run = st.button("run simulation")
 
 # =========================
 # HEADER
