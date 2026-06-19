@@ -187,7 +187,7 @@ with col1:
 
         st.markdown("""
         <div class="card">
-        run simulation to generate tournament outcomes
+       This dashboard runs a Monte Carlo tournament simulator that plays out the World Cup thousands of times in parallel. Each match is resolved probabilistically using team strength signals rather than fixed outcomes. The model builds a distribution of possible tournament paths — capturing upsets, variance, and repeated interactions between strong and weak teams. Final outputs represent how often each team wins across all simulated universes.
         </div>
         """, unsafe_allow_html=True)
 
