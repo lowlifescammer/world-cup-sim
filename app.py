@@ -78,7 +78,7 @@ def get_match_probs(team1, team2):
     }])
 
   features = ['elo_diff', 'neutral', 'is_world_cup', 'is_friendly', 'form_diff']
-X = row[features]
+  X = row[features]
 
     probs = model.predict_proba(X)[0]
 
