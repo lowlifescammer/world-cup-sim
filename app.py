@@ -32,7 +32,7 @@ html, body, .stApp {
     font-family: 'Lato', sans-serif;
 }
 /* PIXEL HEADINGS */
-h1, h2, h3 {
+h3, h3, h3 {
     font-family: 'Press Start 2P', cursive;
     color: #f2f2f2;
 
