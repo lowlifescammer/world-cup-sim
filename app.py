@@ -72,7 +72,8 @@ def get_match_probs(team1, team2):
     home_elo = float(home_elo)
     away_elo = float(away_elo)
 
-    elo_diff = max(min(home_elo - away_elo, 400), -400)
+    elo_diff = (home_elo - away_elo) / 25
+    elo_diff = max(min(elo_diff, 20), -20)
 
     row = pd.DataFrame([{
         'elo_diff': elo_diff,
