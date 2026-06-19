@@ -199,8 +199,11 @@ with col2:
         st.markdown("""
         <div class="card">
         <b>model behavior</b><br><br>
-        • stronger teams dominate<br>
-        • monte carlo reduces randomness<br>
-        • upsets still possible
+        • stronger teams win more consistently due to underlying rating advantage<br>
+        • randomness still plays a major role in knockout rounds <br>
+        • monte carlo approximates full tournament probability distributions
+        • repeated sampling reduces noise and reveals stable win likelihoods
+        • allows comparison of teams under identical simulated conditions
+        • upsets still possible (do you believe in world cup magic?)
         </div>
         """, unsafe_allow_html=True)
