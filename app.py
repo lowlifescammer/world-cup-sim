@@ -43,7 +43,19 @@ h1, h2, h3 {
     letter-spacing: 1px;
     text-transform: lowercase;
 }
+h1 {
+    font-size: 42px;
+}
 
+h2 {
+    font-size: 26px;
+    opacity: 0.95;
+}
+
+h3 {
+    font-size: 18px;
+    opacity: 0.85;
+}
 /* SIDEBAR */
 [data-testid="stSidebar"] {
     background: #050505;
