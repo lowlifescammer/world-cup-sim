@@ -112,7 +112,7 @@ with st.sidebar:
 
     st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
 
-    sims = st.slider("simulations", 500, 20000, 5000)
+    sims = st.slider("iterations", 500, 20000, 5000)
 
     run = st.button("run simulation")
 
@@ -146,11 +146,11 @@ with st.sidebar:
         </div>
         """, unsafe_allow_html=True)
 
-    stage_card("phase 1 — initial model", "basic elo prototype", 1)
-    stage_card("phase 2 — sportsbook comparison", "benchmark vs market odds", 2)
+    stage_card("phase 1 — initial prediction model", "basic elo prototype", 1)
+    stage_card("phase 2 — sportsbook comparison", "benchmark (using ml) vs market odds (sourced from stake)", 2)
     stage_card("phase 3 — calibration fixes", "brier score optimisation", 3)
     stage_card("phase 4 — monte carlo system", "tournament simulation layer", 4)
-    stage_card("phase 5 — final dashboard", "fifa-style portfolio ui", 5)
+    stage_card("phase 5 — final dashboard", "fifa meets arcade style portfolio ui", 5)
 
 # =========================
 # HEADER
