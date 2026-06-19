@@ -122,32 +122,29 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("## model evolution")
 
-def stage_card(title, text, stage_id):
-    active = st.session_state.stage >= stage_id
+    def stage_card(title, text, stage_id):
+        active = st.session_state.stage >= stage_id
 
-    base_color = "#00ffcc" if active else "#222"
-    opacity = "1" if active else "0.35"
+        color = "#00ffcc" if active else "#222"
+        opacity = "1" if active else "0.35"
+        glow = "0 0 10px #00ffcc" if active else "none"
 
-    st.markdown(f"""
-    <style>
-    .card-{stage_id} {{
-        border: 1px solid {base_color};
-        padding: 10px;
-        margin-bottom: 8px;
-        border-radius: 8px;
-        opacity: {opacity};
-        transition: all 0.25s ease;
-        box-shadow: none;
-    }}
-    </style>
-
-    <div class="card card-{stage_id}">
-        <b>{title}</b><br>
-        <span style="font-size:10px;">
-        {text}
-        </span>
-    </div>
-    """, unsafe_allow_html=True)
+        st.markdown(f"""
+        <div style="
+            border: 1px solid {color};
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            opacity: {opacity};
+            box-shadow: {glow};
+            transition: 0.3s ease;
+        ">
+            <b>{title}</b><br>
+            <span style="font-size:10px;">
+            {text}
+            </span>
+        </div>
+        """, unsafe_allow_html=True)
 
     stage_card("phase 1 — initial model", "basic elo prototype", 1)
     stage_card("phase 2 — sportsbook comparison", "benchmark vs market odds", 2)
