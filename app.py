@@ -129,7 +129,7 @@ def knockout_winner(team1, team2):
     elif outcome == 'away':
         return team2
     else:
-        return team1 if np.random.rand() < 0.5 else team2
+        return team1 if np.random.rand() < 0.52 else team2
 
 # =========================
 # GROUP STAGE SIMULATION
