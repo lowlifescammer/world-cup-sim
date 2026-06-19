@@ -155,7 +155,7 @@ with st.sidebar:
 # =========================
 # HEADER
 # =========================
-st.markdown("# world cup simulator")
+st.markdown("# if the world cup was played 50000 times, who would win?")
 st.markdown("<div class='divider'></div>", unsafe_allow_html=True)
 
 # =========================
