@@ -4,150 +4,250 @@ import pandas as pd
 from collections import Counter
 import os
 
-# -------------------------
-# PAGE CONFIG
-# -------------------------
-st.set_page_config(page_title="World Cup Simulator", layout="wide")
+# =========================
+# PAGE SETUP (ARCADE UI)
+# =========================
 
-# -------------------------
-# CUSTOM UI (FONTS + GRADIENT)
-# -------------------------
+st.set_page_config(page_title="world cup simulator", layout="wide")
+
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@300;400;700&display=swap');
+
+/* =========================
+   GLOBAL THEME
+========================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 html, body, [class*="css"] {
-    font-family: 'Lato', sans-serif;
-    background: linear-gradient(135deg, #0f0f1a, #1b1b2e, #0a0a12);
-    color: #f2f2f2;
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    font-family: 'Press Start 2P', monospace !important;
 }
 
-/* main app background */
+/* main app */
 .stApp {
-    background: linear-gradient(135deg, #0f0f1a, #1b1b2e, #0a0a12);
+    background-color: #000000;
 }
 
-/* headings */
+/* =========================
+   HEADINGS (PIXEL + NEON)
+========================= */
+
 h1, h2, h3 {
-    font-family: 'Playfair Display', serif !important;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    font-family: 'Press Start 2P', monospace !important;
+    color: #ffffff !important;
+    text-shadow:
+        0 0 5px #00fff7,
+        0 0 10px #00fff7,
+        0 0 20px #ff00ff;
+    letter-spacing: 1px;
 }
 
-/* sidebar */
+/* =========================
+   LOWERCASE EVERYTHING ELSE
+========================= */
+
+p, div, span, label, button {
+    text-transform: lowercase !important;
+    font-family: Arial, sans-serif !important;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
 [data-testid="stSidebar"] {
-    background: rgba(10,10,18,0.7);
-    border-right: 1px solid rgba(255,255,255,0.08);
+    background-color: #050505;
+    border-right: 1px solid #111;
 }
 
-/* cards */
-.card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    padding: 16px;
-    border-radius: 14px;
-    margin-bottom: 12px;
-    backdrop-filter: blur(8px);
+/* sidebar title */
+.sidebar-title {
+    font-family: 'Press Start 2P', monospace;
+    color: #fff;
+    text-shadow: 0 0 10px #00fff7;
+    font-size: 14px;
+    margin-bottom: 10px;
 }
 
-/* small text */
-.small {
-    opacity: 0.7;
-    font-size: 13px;
+/* slider glow */
+.stSlider > div > div > div > div {
+    background: #00fff7 !important;
 }
+
+/* =========================
+   BUTTON (NEON + HOVER)
+========================= */
+
+.stButton > button {
+    background-color: #111;
+    color: #fff;
+    border: 1px solid #00fff7;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-family: 'Press Start 2P', monospace;
+    transition: all 0.2s ease-in-out;
+}
+
+.stButton > button:hover {
+    background-color: #00fff7;
+    color: #000;
+    box-shadow: 0 0 15px #00fff7;
+    transform: scale(1.05);
+}
+
+/* center button */
+.center-button {
+    display: flex;
+    justify-content: center;
+}
+
+/* =========================
+   PAC-MAN STYLE BLINKING LINE
+========================= */
+
+.pac-line {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    margin: 0 4px;
+    background-color: #00fff7;
+    border-radius: 50%;
+    animation: blink 1s infinite alternate;
+}
+
+@keyframes blink {
+    0% { opacity: 0.2; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1.2); }
+}
+
+/* stagger dots */
+.dot:nth-child(1) { animation-delay: 0s; }
+.dot:nth-child(2) { animation-delay: 0.1s; }
+.dot:nth-child(3) { animation-delay: 0.2s; }
+.dot:nth-child(4) { animation-delay: 0.3s; }
+.dot:nth-child(5) { animation-delay: 0.4s; }
+.dot:nth-child(6) { animation-delay: 0.5s; }
+
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------------
-# LOAD SAFE DATA
-# -------------------------
-@st.cache_data
-def load_data():
-    if not os.path.exists("results.csv"):
-        return None, None
+# =========================
+# HEADER
+# =========================
 
-    results = pd.read_csv("results.csv")
-    return results, True
+st.markdown("# world cup simulator")
 
-results, data_ok = load_data()
+st.markdown("<div style='text-align:center; opacity:0.7;'>simulate alternate tournament realities using monte carlo chaos</div>", unsafe_allow_html=True)
 
-# -------------------------
+# pac-man blinking separator
+st.markdown("""
+<div class="pac-line">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+</div>
+""", unsafe_allow_html=True)
+
+# =========================
 # SIDEBAR
-# -------------------------
+# =========================
+
 with st.sidebar:
-    st.markdown("## ⚽ World Cup Simulator")
-    sims = st.slider("Simulations", 500, 20000, 5000)
-    run = st.button("Run Simulation")
+
+    st.markdown("<div class='sidebar-title'>world cup simulator</div>", unsafe_allow_html=True)
 
     st.markdown("---")
-    st.markdown("Built with Elo + Monte Carlo")
 
-# -------------------------
-# HEADER
-# -------------------------
-st.markdown("# World Cup Simulation Engine")
-st.markdown("<div class='small'>probabilistic tournament modelling for portfolio</div>", unsafe_allow_html=True)
-st.markdown("---")
+    st.markdown("""
+    <div style='font-size:11px; line-height:1.6; opacity:0.8;'>
+    this slider controls the number of monte carlo simulations.<br><br>
+    each simulation runs a full tournament path using probabilistic match outcomes derived from team strength assumptions.<br><br>
+    higher values = more stable probabilities but slower computation.
+    </div>
+    """, unsafe_allow_html=True)
 
-# -------------------------
-# FALLBACK SIMULATION (SAFE)
-# -------------------------
-teams = [
-    "Brazil", "Germany", "France", "Argentina",
-    "Mexico", "South Korea", "USA", "Morocco"
-]
+    sims = st.slider("simulations", 1000, 20000, 5000)
 
-def simulate(n):
-    counter = Counter()
-    for _ in range(n):
-        winner = np.random.choice(teams, p=[0.18,0.16,0.14,0.13,0.12,0.10,0.10,0.07])
-        counter[winner] += 1
-    return counter
+    st.markdown("---")
 
-# -------------------------
-# LAYOUT
-# -------------------------
-col1, col2 = st.columns([2.5, 1])
+# =========================
+# CENTER RUN BUTTON
+# =========================
+
+colA, colB, colC = st.columns([1,2,1])
+
+with colB:
+    run = st.button("run simulation")
+
+# =========================
+# OPTIONAL GRAPHIC SLOT
+# =========================
+
+st.markdown("")
+
+col1, col2 = st.columns([2,1])
 
 with col1:
 
+    st.markdown("## results feed")
+
     if run:
-        results = simulate(int(sims))
+
+        results = simulate(int(sims))  # assumes your backend exists
 
         df = pd.DataFrame(results.items(), columns=["team", "wins"])
         df["prob"] = df["wins"] / df["wins"].sum()
         df = df.sort_values("prob", ascending=False)
 
-        st.markdown("## Tournament Outcomes")
-
-        for _, row in df.iterrows():
+        for _, r in df.iterrows():
             st.markdown(f"""
-            <div class="card">
-                <b>{row['team']}</b><br>
-                <span class="small">win probability: {row['prob']:.2%}</span>
+            <div style="
+                border:1px solid #111;
+                padding:14px;
+                margin-bottom:10px;
+                border-radius:10px;
+                box-shadow: 0 0 10px rgba(0,255,247,0.1);
+            ">
+                <b style="color:#fff; text-shadow:0 0 5px #00fff7;">
+                    {r['team']}
+                </b><br>
+                <span style="opacity:0.7;">win probability: {r['prob']:.2%}</span>
             </div>
             """, unsafe_allow_html=True)
 
+        st.bar_chart(df.set_index("team")["prob"])
+
     else:
-        st.markdown("## Feed")
         st.markdown("""
-        <div class="card">
-        Run simulation to generate World Cup outcomes
+        <div style="opacity:0.7; padding:20px;">
+        run simulation to generate tournament outcomes
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
 with col2:
 
-    st.markdown("## Insights")
+    st.markdown("## visual")
 
-    if run:
-        st.markdown("""
-        <div class="card">
-        <b>Model Notes</b><br>
-        <span class="small">
-        • Strong teams dominate<br>
-        • Monte Carlo smooths randomness<br>
-        • Upsets still possible
-        </span>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+    <div style="
+        border:1px solid #111;
+        padding:10px;
+        border-radius:10px;
+        opacity:0.8;
+    ">
+    image slot (insert pinterest graphics here)
+    </div>
+    """, unsafe_allow_html=True)
+
+    # example image hook
+    # st.image("your_image.png")
