@@ -111,8 +111,18 @@ div.stButton {
     font-size: 12px;
 }
 </style>
-""", unsafe_allow_html=True)
 
+""", unsafe_allow_html=True)
+ st.markdown("""
+    <div class="card">
+    this model uses monte carlo simulation with:
+    <br><br>
+    • elo ratings<br>
+    • form streaks<br>
+    • probabilistic match outcomes<br><br>
+    it simulates thousands of tournaments and averages results.
+    </div>
+    
 
 # =========================
 # HEADER
