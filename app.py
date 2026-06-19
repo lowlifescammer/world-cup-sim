@@ -211,7 +211,6 @@ def monte_carlo(n):
         winners[champ] += 1
 
     return winners
-
 # -------------------------
 # PAGE SETUP
 # -------------------------
@@ -219,131 +218,63 @@ st.set_page_config(layout="wide")
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@300;400;700&display=swap');
 
-html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif;
-    background: #0e0e10;
-    color: #e6e6e6;
-}
-
+/* GLOBAL BACKGROUND (gradient) */
 .stApp {
-    background: #0e0e10;
+    background: linear-gradient(135deg, #0b0c10 0%, #11131a 40%, #0a0f1c 100%);
+    color: #eaeaea;
 }
 
-/* sidebar */
+/* BODY FONT */
+html, body, [class*="css"] {
+    font-family: 'Lato', sans-serif;
+    color: #eaeaea;
+}
+
+/* HEADINGS */
+h1, h2, h3, h4 {
+    font-family: 'Playfair Display', serif !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+}
+
+/* SIDEBAR */
 [data-testid="stSidebar"] {
-    background: #111114;
-    border-right: 1px solid #222;
+    background: rgba(10, 12, 18, 0.75);
+    backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(255,255,255,0.08);
 }
 
-/* remove default padding clutter */
-.block-container {
-    padding-top: 2rem;
-}
-
-/* card style */
+/* CARD STYLE */
 .card {
-    background: #151518;
-    border: 1px solid #2a2a2a;
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
     padding: 14px 16px;
     margin-bottom: 10px;
+    backdrop-filter: blur(8px);
 }
 
+/* SMALL TEXT */
 .small {
-    opacity: 0.6;
+    opacity: 0.65;
     font-size: 13px;
+}
+
+/* BUTTONS */
+.stButton > button {
+    background: linear-gradient(135deg, #2b2f3a, #1b1f2a);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+}
+
+/* SLIDER */
+.stSlider > div {
+    color: white;
 }
 </style>
 """, unsafe_allow_html=True)
-
-# -------------------------
-# SIDEBAR (INTERLOPER NAV)
-# -------------------------
-with st.sidebar:
-    st.markdown("## world cup sim")
-    st.markdown("---")
-
-    sims = st.slider("simulations", 500, 20000, 5000)
-    run = st.button("run simulation")
-
-    st.markdown("---")
-    st.markdown("model: elo + form + mc")
-
-# -------------------------
-# HEADER (INTERLOPER STYLE)
-# -------------------------
-st.markdown("# world cup simulator")
-st.markdown("<div class='small'>probabilistic tournament engine</div>", unsafe_allow_html=True)
-
-st.markdown("---")
-
-# -------------------------
-# SIMULATION (placeholder hook)
-# -------------------------
-def simulate(n):
-    return monte_carlo(n)
-# -------------------------
-# LAYOUT: FEED + SIDE INSIGHTS
-# -------------------------
-col1, col2 = st.columns([2.5, 1])
-
-with col1:
-
-    if run:
-        results = simulate(int(sims))
-
-        df = pd.DataFrame(results.items(), columns=["team", "wins"])
-        df["prob"] = df["wins"] / df["wins"].sum()
-        # -------------------------
-# PORTFOLIO VISUAL UPGRADE
-# -------------------------
-
-        st.markdown("## tournament snapshot")
-
-        col_a, col_b, col_c = st.columns(3)
-
-        col_a.metric("Most likely champion", df.iloc[0]["team"], f"{df.iloc[0]['prob']:.1%}")
-        col_b.metric("Simulations", sims)
-        col_c.metric("Teams tracked", len(df))
-
-        st.markdown("---")
- 
-# probability bar chart (simple + clean)
-        chart_df = df.sort_values("prob", ascending=True)
-
-         st.bar_chart(chart_df.set_index("team")["prob"])
-
-        
-
-        st.markdown("## feed")
-
-        # INTERLOPER STYLE POSTS
-        for _, row in df.sort_values("wins", ascending=False).iterrows():
-            st.markdown(f"""
-            <div class="card">
-                <b>{row['team']}</b><br>
-                <span class="small">win probability: {row['prob']:.2%}</span>
-            </div>
-            """, unsafe_allow_html=True)
-
-    else:
-        st.markdown("## feed")
-        st.markdown("<div class='card'>run simulation to generate tournament outcomes</div>", unsafe_allow_html=True)
-
-with col2:
-
-    st.markdown("## notes")
-
-    if run:
-        st.markdown("""
-        <div class="card">
-        <b>model behavior</b><br>
-        <span class="small">
-        • strong teams dominate<br>
-        • knockout variance increases noise<br>
-        • MC smooths randomness
-        </span>
-        </div>
-        """, unsafe_allow_html=True)
