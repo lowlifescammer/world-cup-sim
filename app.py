@@ -209,7 +209,7 @@ with col2:
         """, unsafe_allow_html=True)
 
     # =========================
-    # VIDEO HUB (ONLY ADDITION)
+    # VIDEO (ONLY ADDITION)
     # =========================
     st.markdown("## feats")
 
