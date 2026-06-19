@@ -270,7 +270,7 @@ html, body, [class*="css"] {
 
 /* headings */
 h1, h2, h3 {
-    font-family: 'Playfair Display', serif !important;
+    font-family: 'Press Start 2P', serif !important;
     font-weight: 700;
     letter-spacing: 0.5px;
 }
