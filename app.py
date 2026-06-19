@@ -1,12 +1,21 @@
-import streamlit as st
-import numpy as np
-import pandas as pd
-from collections import Counter
-
-import pandas as pdeau
 import os
+import pandas as pd
 
-print(os.listdir())
+if not os.path.exists("fixtures.csv"):
+    st.error("fixtures.csv missing from repo")
+    st.stop()
+
+if not os.path.exists("elo.csv"):
+    st.error("elo.csv missing from repo")
+    st.stop()
+
+if not os.path.exists("odds.csv"):
+    st.error("odds.csv missing from repo")
+    st.stop()
+
+if not os.path.exists("results.csv"):
+    st.error("results.csv missing from repo")
+    st.stop()
 
 fixtures = pd.read_csv("fixtures.csv")
 elo = pd.read_csv("elo.csv")
